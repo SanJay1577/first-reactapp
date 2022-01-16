@@ -1,107 +1,198 @@
 import "./App.css";
+import {AddColor} from "./AddColor";
+import Button from '@mui/material/Button';
+import { MovieList } from "./MovieList";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+
+import { useState, useEffect } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Addmovie } from "./Addmovie";
+import { TicTacToe } from "./TicTacToe";
+
+
 
 export default function App() {
-  const data = [
-    {
-      name: "RRR",
-      image:
-        "https://englishtribuneimages.blob.core.windows.net/gallary-content/2021/6/Desk/2021_6$largeimg_977224513.JPG",
-      rating: 8.8,
-      summary:
-        "RRR is an upcoming Indian Telugu-language period action drama film directed by S. S. Rajamouli, and produced by D. V. V. Danayya of DVV Entertainments.",
-      trailer: "https://www.youtube.com/embed/f_vbAtFSEc0"
-    },
-    {
-      name: "Iron man 2",
-      image:
-        "https://m.media-amazon.com/images/M/MV5BMTM0MDgwNjMyMl5BMl5BanBnXkFtZTcwNTg3NzAzMw@@._V1_FMjpg_UX1000_.jpg",
-      rating: 7,
-      summary:
-        "With the world now aware that he is Iron Man, billionaire inventor Tony Stark (Robert Downey Jr.) faces pressure from all sides to share his technology with the military. He is reluctant to divulge the secrets of his armored suit, fearing the information will fall into the wrong hands. With Pepper Potts (Gwyneth Paltrow) and Rhodes (Don Cheadle) by his side, Tony must forge new alliances and confront a powerful new enemy.",
-      trailer: "https://www.youtube.com/embed/wKtcmiifycU"
-    },
-    {
-      name: "No Country for Old Men",
-      image:
-        "https://upload.wikimedia.org/wikipedia/en/8/8b/No_Country_for_Old_Men_poster.jpg",
-      rating: 8.1,
-      summary:
-        "A hunter's life takes a drastic turn when he discovers two million dollars while strolling through the aftermath of a drug deal. He is then pursued by a psychopathic killer who wants the money.",
-      trailer: "https://www.youtube.com/embed/38A__WT3-o0"
-    },
-    {
-      name: "Jai Bhim",
-      image:
-        "https://m.media-amazon.com/images/M/MV5BY2Y5ZWMwZDgtZDQxYy00Mjk0LThhY2YtMmU1MTRmMjVhMjRiXkEyXkFqcGdeQXVyMTI1NDEyNTM5._V1_FMjpg_UX1000_.jpg",
-      summary:
-        "A tribal woman and a righteous lawyer battle in court to unravel the mystery around the disappearance of her husband, who was picked up the police on a false case",
-      rating: 8.8,
-      trailer: "https://www.youtube.com/embed/nnXpbTFrqXA"
-    },
-    {
-      name: "The Avengers",
-      rating: 8,
-      summary:
-        "Marvel's The Avengers (classified under the name Marvel Avengers\n Assemble in the United Kingdom and Ireland), or simply The Avengers, is\n a 2012 American superhero film based on the Marvel Comics superhero team\n of the same name.",
-      image:
-        "https://terrigen-cdn-dev.marvel.com/content/prod/1x/avengersendgame_lob_crd_05.jpg",
-      trailer: "https://www.youtube.com/embed/eOrNdBpGMv8"
-    },
-    {
-      name: "Interstellar",
-      image: "https://m.media-amazon.com/images/I/A1JVqNMI7UL._SL1500_.jpg",
-      rating: 8.6,
-      summary:
-        "When Earth becomes uninhabitable in the future, a farmer and ex-NASA\n pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team\n of researchers, to find a new planet for humans.",
-      trailer: "https://www.youtube.com/embed/zSWdZVtXT7E"
-    },
-    {
-      name: "Baahubali",
-      image: "https://flxt.tmsimg.com/assets/p11546593_p_v10_af.jpg",
-      rating: 8,
-      summary:
-        "In the kingdom of Mahishmati, Shivudu falls in love with a young warrior woman. While trying to woo her, he learns about the conflict-ridden past of his family and his true legacy.",
-      trailer: "https://www.youtube.com/embed/sOEg_YZQsTI"
-    },
-    {
-      name: "Ratatouille",
-      image:
-        "https://resizing.flixster.com/gL_JpWcD7sNHNYSwI1ff069Yyug=/ems.ZW1zLXByZC1hc3NldHMvbW92aWVzLzc4ZmJhZjZiLTEzNWMtNDIwOC1hYzU1LTgwZjE3ZjQzNTdiNy5qcGc=",
-      rating: 8,
-      summary:
-        "Remy, a rat, aspires to become a renowned French chef. However, he fails to realise that people despise rodents and will never enjoy a meal cooked by him.",
-      trailer: "https://www.youtube.com/embed/NgsQ8mVkN8w"
-    }
-  ];
-  
 
-  return (
-    <div className="App">
+
    
-      {data.map(({name, image, rating, summary}) => (
-        <Welcome 
-        name={name} 
-        image={image} 
-        rating={rating}
-        summary={summary}/>
-      ))}
-    </div>
-  );
-}
-//props
-function Welcome({ name, image, rating, summary}) {
-  const styles = {color:"red", fontSize:"20px"};
+  const [movieList, setMovieList] = useState([]);
 
- if(rating>8){
-  styles.color = "green";
- }
+  const getMovies = ()=>{
+    fetch("https://61e2dd193050a100176822d2.mockapi.io/movies", 
+    {method:"GET"})
+.then((data)=>data.json())
+.then((movie)=>setMovieList(movie))
+  }; 
 
+  const deleteMovie = (id)=>{
+    fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/${id}`, 
+    {method:"DELETE"})
+    .then((data)=>data.json())
+    .then(()=>getMovies()); // to delete and refresh theh list
+  }
+ //remounted when route is changed so useEffect is trigged 
+  useEffect(getMovies, []); 
+
+
+
+ 
+
+  const history = useHistory();
+  const [bg, setBg] = useState("dark")
+  const theme = createTheme({
+  palette: {
+    mode: bg,
+},
+})
+  
   return (
-    <div class ="card">
-      <h2 className="user-name"> {name}</h2>
-      <img src={image} alt="shark" />
-      <p style ={styles}>Ratings : {rating}⭐</p>
-      <p>Summary: {summary}</p>
+    
+    <ThemeProvider theme = {theme}>
+    
+
+    <div className="App">
+
+<AppBar position="static">
+  <Toolbar>
+  <Button color ="inherit" onClick={()=>{history.push("/")}}>Home</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/movies")}}>Movies</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/color")}}>Color Game</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/movie/add")}}>Add-Movie</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/films")}}>Films</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/tic-tac-toe")}}>TicTacToe</Button>
+  <Button sx={{marginLeft: "auto"}} //to get the button right side end. 
+  color ="inherit" 
+   onClick={()=>{setBg(bg=== "light"? "dark": "light")}}>
+     <Brightness4Icon/>
+     </Button>
+  </Toolbar>
+</AppBar>
+     
+      {/* <nav>
+        <Link to = "/">Home</Link>
+        <Link to = "/movies">Movies</Link>
+        <Link to = "/color">Color Game</Link>
+        <Link to = "/movie/add">Add-Movie</Link>
+        <Link to = "/films">Films</Link>
+
+      </nav> */}
+      <Switch>
+      <Route exact path = "/">
+            Welcome to Multi App
+          </Route>
+
+          <Route path = "/movies/:id">
+              <MovieDetails movies={movieList}/>
+          </Route>
+
+      <Route path ="/movies">
+
+        <div className="movie-content">
+          {/* {colorlist.map((clr) => <ColorList clr={clr} />)} */}
+          {movieList.map(({name, poster, rating, summary, id}, index)=><MovieList 
+          // key ={index} // using key a unique value solves the child problem.. 
+          key ={id}
+          setMovieList={setMovieList}
+        deleteButton ={
+            <Button 
+            color="error" onClick={()=>{
+              deleteMovie(id);
+            //   console.log("deleting movies...")
+            //  // console.log(movieList);
+            //   const deleteIndex = index;
+            //  const remainingMovies = movieList.filter((movieList, idx) => (deleteIndex !== idx))
+            //    console.log(remainingMovies);
+            //    setMovieList(remainingMovies);
+            
+             }} 
+            variant="outlined">Delete</Button>}
+         id ={index}
+        name={name} 
+        poster={poster} 
+        rating={rating}
+        summary={summary}/>)}
+        
+        </div>
+          </Route>
+
+          <Route path = "/color">
+       <AddColor/>
+          </Route>
+          <Route path ="/tic-tac-toe">
+             <TicTacToe/>
+          </Route>
+          <Route path = "/movie/add">
+            <Addmovie movies={movieList} setMovieList = {setMovieList}/>
+          </Route>
+          <Route path ="/films">
+            <Redirect to ="/movies"/>
+          </Route>
+         
+         <Route path ="**">
+            <NotFound/>
+         </Route>
+
+        </Switch>
+        
+
+    
+
     </div>
-  );
+    </ThemeProvider>
+
+  )
+
+
+
+
 }
+
+
+
+function MovieDetails({movies}){
+  console.log(movies)
+  
+const {id} = useParams();
+const movie = movies[id];
+const history = useHistory();
+
+
+return(
+
+    <div className = "trailer">
+    <iframe 
+    width="80%" height="523" src={movie.trailer} 
+    title="YouTube video player" frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+   </iframe>
+  
+    <div className="movieList">
+    <h2 className="user-name"> {movie.name} </h2>
+    <p>{movie.rating}⭐</p>
+    <p>{movie.summary}</p>
+    <Button onClick={()=> history.goBack()}  
+    variant="outlined">Back</Button>
+   </div>
+   </div>
+ 
+);
+
+}
+
+function NotFound(){
+  return(
+    <div>
+      <img src ="https://freefrontend.com/assets/img/html-funny-404-pages/CodePen-404-Page.gif" alt="404"/>
+    </div>
+  )
+}
+
+
+//Post -> Positive posting :
+// update it locally and then then do the post Api Stuff : 
