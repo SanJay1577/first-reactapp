@@ -14,6 +14,7 @@ import { TicTacToe } from "./TicTacToe";
 import { MoviePage } from "./MoviePage";
 import { MovieDetails } from "./MovieDetails";
 import { EditMovie } from "./EditMovie";
+import { BasicForm } from "./BasicForm";
 
 
 
@@ -87,6 +88,10 @@ export default function App() {
           </Route>
           <Route path ="/films">
             <Redirect to ="/movies"/>
+          </Route>
+
+          <Route path ="/basic-form">
+            <BasicForm/>
           </Route>
          
          <Route path ="**">
