@@ -1,46 +1,23 @@
 import "./App.css";
 import {AddColor} from "./AddColor";
 import Button from '@mui/material/Button';
-import { MovieList } from "./MovieList";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { Addmovie } from "./Addmovie";
 import { TicTacToe } from "./TicTacToe";
+import { MoviePage } from "./MoviePage";
+import { MovieDetails } from "./MovieDetails";
+import { EditMovie } from "./EditMovie";
 
 
 
 export default function App() {
-
-
-   
-  const [movieList, setMovieList] = useState([]);
-
-  const getMovies = ()=>{
-    fetch("https://61e2dd193050a100176822d2.mockapi.io/movies", 
-    {method:"GET"})
-.then((data)=>data.json())
-.then((movie)=>setMovieList(movie))
-  }; 
-
-  const deleteMovie = (id)=>{
-    fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/${id}`, 
-    {method:"DELETE"})
-    .then((data)=>data.json())
-    .then(()=>getMovies()); // to delete and refresh theh list
-  }
- //remounted when route is changed so useEffect is trigged 
-  useEffect(getMovies, []); 
-
-
-
- 
 
   const history = useHistory();
   const [bg, setBg] = useState("dark")
@@ -87,37 +64,13 @@ export default function App() {
           </Route>
 
           <Route path = "/movies/:id">
-              <MovieDetails movies={movieList}/>
+              <MovieDetails />
           </Route>
 
       <Route path ="/movies">
 
-        <div className="movie-content">
-          {/* {colorlist.map((clr) => <ColorList clr={clr} />)} */}
-          {movieList.map(({name, poster, rating, summary, id}, index)=><MovieList 
-          // key ={index} // using key a unique value solves the child problem.. 
-          key ={id}
-          setMovieList={setMovieList}
-        deleteButton ={
-            <Button 
-            color="error" onClick={()=>{
-              deleteMovie(id);
-            //   console.log("deleting movies...")
-            //  // console.log(movieList);
-            //   const deleteIndex = index;
-            //  const remainingMovies = movieList.filter((movieList, idx) => (deleteIndex !== idx))
-            //    console.log(remainingMovies);
-            //    setMovieList(remainingMovies);
-            
-             }} 
-            variant="outlined">Delete</Button>}
-         id ={index}
-        name={name} 
-        poster={poster} 
-        rating={rating}
-        summary={summary}/>)}
-        
-        </div>
+          <MoviePage/>
+
           </Route>
 
           <Route path = "/color">
@@ -127,7 +80,10 @@ export default function App() {
              <TicTacToe/>
           </Route>
           <Route path = "/movie/add">
-            <Addmovie movies={movieList} setMovieList = {setMovieList}/>
+            <Addmovie/>
+          </Route>
+          <Route path ="/movie/edit/:id">
+             <EditMovie/>
           </Route>
           <Route path ="/films">
             <Redirect to ="/movies"/>
@@ -154,37 +110,6 @@ export default function App() {
 
 
 
-function MovieDetails({movies}){
-  console.log(movies)
-  
-const {id} = useParams();
-const movie = movies[id];
-const history = useHistory();
-
-
-return(
-
-    <div className = "trailer">
-    <iframe 
-    width="80%" height="523" src={movie.trailer} 
-    title="YouTube video player" frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen>
-   </iframe>
-  
-    <div className="movieList">
-    <h2 className="user-name"> {movie.name} </h2>
-    <p>{movie.rating}⭐</p>
-    <p>{movie.summary}</p>
-    <Button onClick={()=> history.goBack()}  
-    variant="outlined">Back</Button>
-   </div>
-   </div>
- 
-);
-
-}
-
 function NotFound(){
   return(
     <div>
@@ -194,5 +119,3 @@ function NotFound(){
 }
 
 
-//Post -> Positive posting :
-// update it locally and then then do the post Api Stuff : 

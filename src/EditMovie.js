@@ -1,30 +1,53 @@
 import { HistoryToggleOff } from '@mui/icons-material';
 import Button from '@mui/material/Button';
-import { useState,  } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
-export function Addmovie() {
 
-  
-  const [name, setName] = useState("");
-  const [poster, setImage] = useState("");
-  const [rating, setRating] = useState("");
-  const [summary, setSummary] = useState("");
-  const [trailer, setTrailer] = useState("");
+export function EditMovie() {
+    const { id } = useParams();
+  // const movie = movies[id];
+  const history = useHistory();
+
+  const [movie, setMovie] = useState(null);
+
+  const getMovie = () => {
+    fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/${id}`,
+      { method: "GET" })
+      .then((data) => data.json())
+      .then((mv) => setMovie(mv));
+  };
+
+  useEffect(getMovie, []);
+    return movie ? <UpdateMovie movie={movie}/> : ""; 
+    
+}
+
+
+// To solve the race between the UpdateForm Loading we use conditional rendering 
+
+  function UpdateMovie({movie}){
+
+  const [name, setName] = useState(movie.name);
+  const [poster, setImage] = useState(movie.poster);
+  const [rating, setRating] = useState(movie.rating);
+  const [summary, setSummary] = useState(movie.summary);
+  const [trailer, setTrailer] = useState(movie.trailer);
   const styles = { fontSize: "24px" };
 
  
 
-  const addMovie = () => {
-  const newMovie = {
+  const editMovie = () => {
+  const updatedMovie = {
     name,
     poster,
     rating,
     summary,
     trailer
   
-  // console.log(newMovie);
-  // setMovieList([...movies, newMovie]);
+  // console.log(updatedMovie);
+  // setMovieList([...movies, updatedMovie]);
   // history.push("/movies");
 };
 
@@ -33,9 +56,9 @@ export function Addmovie() {
 // 2.Body data & JSON data
 // 3.Header JSON data 
 
-fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/`,{
-      method:"POST",
-      body:JSON.stringify(newMovie),
+fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/${movie.id}`,{
+      method:"PUT",
+      body:JSON.stringify(updatedMovie),
       headers:{
         "Content-Type":"application/json"
       },
@@ -76,8 +99,8 @@ const history = useHistory();
 
      
               
-      <Button onClick={addMovie}
-          variant="outlined">Add Movie</Button>
+      <Button onClick={editMovie}
+          variant="outlined">Save Changes</Button>
 
     </div>
   );

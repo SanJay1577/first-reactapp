@@ -1,12 +1,11 @@
 .App {
-  font-family: sans-serif;
+  /* font-family: sans-serif;
   text-align: center;
   display:grid;
-  gap:1rem;
-  grid-template-columns: repeat(auto-fit, minmax(340px,1fr));
- justify-content: center;
- 
-
+  justify-items: center;
+  gap:0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px,1fr)); */
+  margin:0px;
 }
 .user-name {
   font-size: 20px;
@@ -14,16 +13,18 @@
   font-weight: bolder;
 }
 img {
-  width: 180px;
-  height:300px;
+  width: 200px;
+  height:360px;
   object-fit: cover;
 }
 .card{
+  
   border:5px;
-  width:250px;
-  height:600px;
+  width:260px;
+  /* height:600px; */
   background-color: white;
-  padding: 10px;;
+  padding: 10px;
+  text-align: center;
 }
 body{
   background-color: whitesmoke;
@@ -31,4 +32,68 @@ body{
 }
 p{
   font-size: small;
+}
+.counter-app > button {
+  font-size: 1rem;
+  margin:5px;
+
+}
+.movie-header{
+display:flex;
+flex-direction: column;
+gap:0.5rem;
+align-items: stretch;
+}
+
+.movie-content{
+  display: flex;
+  gap:1rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 24px;
+
+}
+
+.movie-header > button{
+  padding:10px;
+}
+button{
+  margin: 0.2rem;
+}
+.delete-btn{
+  background-color: red;
+  color: aliceblue;
+}
+
+nav{
+  display: flex;
+  flex-direction: row;
+  justify-self: start;
+  gap:1rem;
+  padding:10px; 
+  font-family:sans-serif;
+}
+.movieList{
+  max-width: 45rem;
+  padding:24px;
+}
+
+.game-box{
+  height: 8rem;
+  width:8rem; 
+  border:1px solid black; 
+  font-size: 7rem;
+  display:flex;
+  justify-content: center;
+   align-items: center;
+   cursor: pointer;
+}
+.game-box:hover{
+  background-color: rgba(0, 0, 0, 0.219);
+}
+.board{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  width: min-content; 
 }
