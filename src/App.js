@@ -43,6 +43,7 @@ export default function App() {
   <Button color ="inherit" onClick={()=>{history.push("/movie/add")}}>Add-Movie</Button>
   <Button color ="inherit" onClick={()=>{history.push("/films")}}>Films</Button>
   <Button color ="inherit" onClick={()=>{history.push("/tic-tac-toe")}}>TicTacToe</Button>
+  <Button color ="inherit" onClick={()=>{history.push("/basic-form")}}>Form</Button>
   <Button sx={{marginLeft: "auto"}} //to get the button right side end. 
   color ="inherit" 
    onClick={()=>{setBg(bg=== "light"? "dark": "light")}}>

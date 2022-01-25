@@ -3,6 +3,9 @@ import Button from '@mui/material/Button';
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import {useFormik} from "formik";
+import * as yup from 'yup';
+import { movieValidationSchema } from './Addmovie';
 
 
 export function EditMovie() {
@@ -29,27 +32,22 @@ export function EditMovie() {
 
   function UpdateMovie({movie}){
 
-  const [name, setName] = useState(movie.name);
-  const [poster, setImage] = useState(movie.poster);
-  const [rating, setRating] = useState(movie.rating);
-  const [summary, setSummary] = useState(movie.summary);
-  const [trailer, setTrailer] = useState(movie.trailer);
-  const styles = { fontSize: "24px" };
+   
+const {handleSubmit, values, handleChange, handleBlur, touched, errors} =  useFormik({
+  initialValues : movie,
+ 
+  validationSchema: movieValidationSchema,
+  onSubmit:(updatedMovie)=>{
+    console.log("onSubmit", updatedMovie)
+    editMovie(updatedMovie);
+  },
+  
+});
 
  
 
-  const editMovie = () => {
-  const updatedMovie = {
-    name,
-    poster,
-    rating,
-    summary,
-    trailer
-  
-  // console.log(updatedMovie);
-  // setMovieList([...movies, updatedMovie]);
-  // history.push("/movies");
-};
+  const editMovie = (updatedMovie) => {
+
 
 // //Import Things in Post:
 // 1.Method Post 
@@ -70,6 +68,7 @@ fetch(`https://61e2dd193050a100176822d2.mockapi.io/movies/${movie.id}`,{
 
 }; 
 
+const styles = { fontSize: "24px" };
 
 const history = useHistory();
 
@@ -77,30 +76,77 @@ const history = useHistory();
   return (
     <div className="movie-header">
 
-      <input value={poster}
-        onChange={(event) => (setImage(event.target.value))}
-        style={styles} placeholder="Enter Movie URL" />
+<form onSubmit={handleSubmit} className="movie-header">
 
-      <input value={name}
-        onChange={(event) => (setName(event.target.value))}
-        style={styles} placeholder="Enter Moview Name" />
+<input 
+ id = "poster"
+ name ="poster"
+ type = "poster" 
+ value={values.poster}
+ onChange={handleChange}
+ onBlur={handleBlur}
+ placeholder="Enter Movie URL" 
+ style={styles}/>
 
-      <input value={rating}
-        onChange={(event) => (setRating(event.target.value))}
-        style={styles} placeholder="Enter Ratings" />
+ {touched.poster && errors.poster ? errors.poster : ""}
 
-      <input value={summary}
-        onChange={(event) => (setSummary(event.target.value))}
-        style={styles} placeholder="Enter Summary" />
+<input 
+id = "name"
+name ="name"
+type = "name" 
+value={values.name}
+onChange={handleChange}
+onBlur={handleBlur}
+style={styles}
+placeholder="Enter Moview Name" />
 
-        <input value={trailer}
-        onChange={(event) => (setTrailer(event.target.value))}
-        style={styles} placeholder="Enter trailer" />
+ {touched.name && errors.name ? errors.name : ""}
 
-     
-              
-      <Button onClick={editMovie}
-          variant="outlined">Save Changes</Button>
+<input 
+ id = "rating"
+ name ="rating"
+ type = "rating" 
+ value={values.rating}
+ onChange={handleChange}
+ onBlur={handleBlur}
+ style={styles}
+placeholder="Enter Ratings" />
+
+{touched.rating && errors.rating ? errors.rating : ""}
+
+<input 
+ id = "summary"
+ name ="summary"
+ type = "summary" 
+ value={values.summary}
+ onChange={handleChange}
+ onBlur={handleBlur}
+ style={styles}
+placeholder="Enter Summary" />
+
+{touched.summary && errors.summary ? errors.summary : ""}
+
+  <input 
+   id = "trailer"
+   name ="trailer"
+   type = "trailer" 
+   value={values.trailer}
+   onChange={handleChange}
+   onBlur={handleBlur}
+   style={styles}
+   placeholder="Enter trailer" />
+
+ {touched.trailer && errors.trailer ? errors.trailer : ""}
+
+
+        
+<Button 
+ type="submit"
+ variant="outlined">
+  Edit Movie
+  </Button>
+
+</form>
 
     </div>
   );
